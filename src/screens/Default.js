@@ -22,7 +22,7 @@ class Default extends Component {
     getVerification = async () => {
         const token = await AsyncStorage.getItem('token');
         console.log(token);
-        axios.get('http://192.168.1.2:3000/api/private/', {
+        axios.get('http://192.168.1.3:3000/api/private/', {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `${token}`
@@ -34,6 +34,7 @@ class Default extends Component {
                 });
             })
             .catch((error) => {
+                console.log('Here');
                 this.props.navigation.navigate('Login', {
                 });
             })

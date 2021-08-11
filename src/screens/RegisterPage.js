@@ -12,7 +12,7 @@ import {
 
 const axios = require('axios');
 
-class LoginPage extends Component {
+class RegisterPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -21,43 +21,15 @@ class LoginPage extends Component {
         }
     }
 
-    handleRegisterPressed = () => {
-        console.log('Pressed');
-        this.props.navigation.navigate('Register', {
-
-        });
-    }
-
-    handleLoginPressed = async () => {
-        const data = {
-            username: this.state.username,
-            password: this.state.password
-        }
-        axios.post('http://192.168.1.3:3000/api/login/', data)
-            .then(async (response) => {
-                try {
-                    this.setState({ 
-                        username: '',
-                        password: ''
-                    })
-                    this.props.navigation.navigate('Welcome', {
-                        username: response.data.USERNAME
-                    })
-                    await AsyncStorage.setItem('token', response.data.ACCESS_TOKEN);
-                } catch (e) {
-                    console.log(e);
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+    handleSignInPressed() {
+        this.props.navigation.goBack();
     }
 
     render() {
         return(
             <SafeAreaView style = {styles.container}>
                 <View style = {styles.titleWrapper}>
-                    <Text style = {styles.loginTitle}>Sign in to app</Text>
+                    <Text style = {styles.loginTitle}>Sign up to app</Text>
                 </View>
                 <View style = {styles.loginWrapper}>
                     <TextInput
@@ -87,14 +59,14 @@ class LoginPage extends Component {
                             this.handleLoginPressed()
                         }}
                     >
-                        <Text style = {{fontSize: 17}}>Sign in</Text>
+                        <Text style = {{fontSize: 17}}>Sign up</Text>
                     </TouchableOpacity>
                     <View style = {styles.registerWrapper}>
-                        <Text style = {styles.registerText}>Don't have any accounts ? </Text>
+                        <Text style = {styles.registerText}>Already have any accounts ? </Text>
                         <TouchableOpacity
-                            onPress = {() => {this.handleRegisterPressed()}}
+                            onPress = {() => {this.handleSignInPressed()}}
                         >
-                            <Text style = {styles.registerText}>Register an account</Text>
+                            <Text style = {styles.registerText}>Sign in</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -148,4 +120,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default LoginPage;
+export default RegisterPage;

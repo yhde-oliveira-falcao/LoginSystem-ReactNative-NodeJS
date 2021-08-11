@@ -3,8 +3,14 @@ const express = require('express');
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const verifyToken = require('./middleware/middleware');
+const mongoose = require('mongoose');
 const app = express();
 const port = 3000;
+
+mongoose.connect('mongodb://localhost:27017/login-db', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
 
 app.use(express.json());
 
@@ -12,7 +18,6 @@ var account = [
     {
         username: 'haohuynh',
         password: 'hao12345',
-        token: ''
     }
 ]
 
@@ -54,5 +59,5 @@ app.get('/api/private/', verifyToken, (req, res, next) => {
 
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://192.168.1.2:${port}`)
+    console.log(`Example app listening at http://192.168.1.3:${port}`)
 });

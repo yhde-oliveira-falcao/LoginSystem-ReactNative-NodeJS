@@ -19,6 +19,7 @@ class WelcomePage extends Component {
         } catch(e) {
             console.log(e);
         }
+        this.props.navigation.navigate('Login');
     }
 
     render() {
@@ -28,7 +29,7 @@ class WelcomePage extends Component {
                 <View>
                     <TouchableOpacity 
                         style = {{margin: 10}}
-                        onPressed = {this.handleSignOutPressed()}
+                        onPress = {() => {this.handleSignOutPressed()}}
                     >
                         <Text style = {{fontSize: 15}}>Sign out</Text>
                     </TouchableOpacity>

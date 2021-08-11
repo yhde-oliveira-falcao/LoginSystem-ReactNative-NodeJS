@@ -3,6 +3,7 @@ import 'localstorage-polyfill';
 import LoginPage from './screens/LoginPage';
 import WelcomePage from './screens/WelcomePage';
 import Default from './screens/Default';
+import RegisterPage from './screens/RegisterPage';
 
 import {
   SafeAreaView,
@@ -37,6 +38,11 @@ class App extends Component {
                     <Stack.Screen 
                         name = "Login" 
                         component = { LoginPage } 
+                        options={{header: () => null}}
+                    ></Stack.Screen>
+                    <Stack.Screen 
+                        name = "Register" 
+                        component = { RegisterPage } 
                         options={{header: () => null}}
                     ></Stack.Screen>
                     <Stack.Screen 
