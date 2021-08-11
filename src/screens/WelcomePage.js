@@ -3,19 +3,36 @@ import {
     View,
     Text,
     SafeAreaView,
-    StyleSheet
+    StyleSheet,
+    TouchableOpacity
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class WelcomePage extends Component {
     constructor(props) {
         super(props);
     }
 
+    handleSignOutPressed = async () => {
+        try {
+            await AsyncStorage.setItem('token', '');
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
     render() {
-        console.log(localStorage.getItem('token'));
         return(
             <SafeAreaView style = {styles.container}>
                 <Text style = {styles.welcomeText}>Welcome {this.props.route.params.username}</Text>
+                <View>
+                    <TouchableOpacity 
+                        style = {{margin: 10}}
+                        onPressed = {this.handleSignOutPressed()}
+                    >
+                        <Text style = {{fontSize: 15}}>Sign out</Text>
+                    </TouchableOpacity>
+                </View>
             </SafeAreaView>
         );
     }

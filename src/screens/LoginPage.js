@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import 'localstorage-polyfill';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   SafeAreaView,
   StyleSheet,
@@ -16,21 +17,25 @@ class LoginPage extends Component {
         super(props);
         this.state = {
             username: '',
-            password: ''
+            password: '',
         }
     }
 
-    handleLoginPressed = () => {
+    handleLoginPressed = async () => {
         const data = {
             username: this.state.username,
             password: this.state.password
         }
         axios.post('http://192.168.1.2:3000/api/login/', data)
-            .then((response) => {
-                localStorage.setItem("token", response.data.ACCESS_TOKEN);
-                this.props.navigation.navigate('Welcome', {
-                    username: response.data.USERNAME
-                })
+            .then(async (response) => {
+                try {
+                    this.props.navigation.navigate('Welcome', {
+                        username: response.data.USERNAME
+                    })
+                    await AsyncStorage.setItem('token', response.data.ACCESS_TOKEN);
+                } catch (e) {
+                    console.log(e);
+                }
             })
             .catch((error) => {
                 console.log(error)

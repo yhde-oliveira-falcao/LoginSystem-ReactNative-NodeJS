@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 const axios = require('axios');
 import 'localstorage-polyfill';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   SafeAreaView,
   StyleSheet,
@@ -13,10 +14,13 @@ import {
 class Default extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            token: ''
+        }
     }
 
-    componentDidMount() {
-        const token = localStorage.token;
+    getVerification = async () => {
+        const token = await AsyncStorage.getItem('token');
         console.log(token);
         axios.get('http://192.168.1.2:3000/api/private/', {
             headers: {
@@ -26,13 +30,17 @@ class Default extends Component {
         })
             .then((response) => {
                 this.props.navigation.navigate('Welcome', {
-                    username: response.username
+                    username: response.data.username
                 });
             })
             .catch((error) => {
                 this.props.navigation.navigate('Login', {
                 });
             })
+    }
+
+    componentDidMount() {
+        this.getVerification();
     }
 
     render() {
