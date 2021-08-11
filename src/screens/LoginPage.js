@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import 'localstorage-polyfill';
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,6 +8,8 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+
+const axios = require('axios');
 
 class LoginPage extends Component {
     constructor(props) {
@@ -18,7 +21,20 @@ class LoginPage extends Component {
     }
 
     handleLoginPressed = () => {
-        console.log(this.state.username);
+        const data = {
+            username: this.state.username,
+            password: this.state.password
+        }
+        axios.post('http://192.168.1.2:3000/api/login/', data)
+            .then((response) => {
+                localStorage.setItem("token", response.data.ACCESS_TOKEN);
+                this.props.navigation.navigate('Welcome', {
+                    username: response.data.USERNAME
+                })
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
     render() {

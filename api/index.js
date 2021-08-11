@@ -16,7 +16,7 @@ var account = [
     }
 ]
 
-app.get('/api/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
     const {username, password} = req.body;
     if(!(username && password)) {
         res.status(400).send('App input are required!');
@@ -36,13 +36,14 @@ app.get('/api/login', async (req, res) => {
                 };
                 const token = jwt.sign(dataForAccessToken, accessTokenSercet, expiresTime);
                 context = {
-                    ACCESS_TOKEN: token
+                    "USERNAME": user.username,
+                    "ACCESS_TOKEN": token,
                 }
                 res.status(200).json(context);
             }
         });
     } else {
-        res.status(400).send("ERROR");
+        res.status(400).send("Token is invalid!");
     }
 });
 
