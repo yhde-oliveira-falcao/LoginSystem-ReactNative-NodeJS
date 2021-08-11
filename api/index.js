@@ -16,13 +16,6 @@ mongoose.connect('mongodb://localhost:27017/login-db', {
 
 app.use(express.json());
 
-var account = [
-    {
-        username: 'haohuynh',
-        password: 'hao12345',
-    }
-]
-
 app.post('/api/login', async (req, res) => {
     const {username, password} = req.body;
     if(!(username && password)) {
@@ -32,7 +25,19 @@ app.post('/api/login', async (req, res) => {
     if(!user) {
         res.status(404).send('Username or password is invalid!');
     }
-    if(await bcrypt.compare(password, user.password))
+    if(await bcrypt.compare(password, user.password)) {
+        var context = {
+            id: user._id,
+            username: user.username
+        }
+        const token = jwt.sign(context, process.env.ACCESS_TOKEN_SERCET, process.env.ACCESS_TOKEN_LIFE);
+        var data = {
+            USERNAME: user.username,
+            ACCESS_TOKEN: token
+        }
+
+        return res.status(200).send(data);
+    }
 });
 
 app.post('/api/register/', async (req, res) => {
@@ -62,14 +67,13 @@ app.post('/api/register/', async (req, res) => {
         throw error;
         res.status(400).send(error);
     }
-    res.status(200).send('OK');
+    res.status(200).json({USERNAME: username});
 })
 
 app.get('/api/private/', verifyToken, (req, res, next) => {
     const username = req.username;
     res.status(200).send(username);
 })
-
 
 app.listen(port, () => {
     console.log(`Example app listening at http://192.168.1.3:${port}`)

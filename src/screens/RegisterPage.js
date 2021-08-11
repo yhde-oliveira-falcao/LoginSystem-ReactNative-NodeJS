@@ -32,9 +32,15 @@ class RegisterPage extends Component {
         }
         axios.post('http://192.168.1.3:3000/api/register/', data)
             .then((response) => {
-                
+                this.setState({ 
+                    username: '',
+                    password: ''
+                });
+                this.props.navigation.navigate('Welcome', {
+                    username: response.data.USERNAME
+                });
             })
-            .catche((error) => {
+            .catch((error) => {
                 console.log(error);
             })
     }
