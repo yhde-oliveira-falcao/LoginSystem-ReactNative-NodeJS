@@ -41,6 +41,10 @@ class RegisterPage extends Component {
                 });
             })
             .catch((error) => {
+                this.setState({ 
+                    username: '',
+                    password: ''
+                });
                 console.log(error);
             })
     }

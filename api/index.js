@@ -16,27 +16,32 @@ mongoose.connect('mongodb://localhost:27017/login-db', {
 
 app.use(express.json());
 
-app.post('/api/login', async (req, res) => {
+app.post('/api/login/', async (req, res) => {
     const {username, password} = req.body;
     if(!(username && password)) {
         res.status(400).send('App input are required!');
     }
     const user = await User.findOne({username}).lean();
     if(!user) {
-        res.status(404).send('Username or password is invalid!');
+        res.status(401).send('Username or password is invalid!');
     }
     if(await bcrypt.compare(password, user.password)) {
-        var context = {
-            id: user._id,
-            username: user.username
+        try {
+            const context = {
+                id: user._id,
+                username: user.username
+            }
+            const token = jwt.sign(context, process.env.ACCESS_TOKEN_SERCET,{
+                expiresIn: process.env.ACCESS_TOKEN_LIFE
+            });
+            var data = {
+                USERNAME: user.username,
+                ACCESS_TOKEN: token
+            }
+            return res.status(200).send(data);
+        } catch(error) {
+            return res.status(400).send('There are some error with our server, please try later!');
         }
-        const token = jwt.sign(context, process.env.ACCESS_TOKEN_SERCET, process.env.ACCESS_TOKEN_LIFE);
-        var data = {
-            USERNAME: user.username,
-            ACCESS_TOKEN: token
-        }
-
-        return res.status(200).send(data);
     }
 });
 
