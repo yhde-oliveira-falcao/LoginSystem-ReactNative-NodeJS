@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
     username: { type: String, default: '', required: true, unique: true},
     password: { type: String, default: '', required: true},    
-}, { collection: 'user' });
+}, { collection: 'users' });
 
-const model = mongoose.Model('UserSchema', UserSchema);
+const model = mongoose.model('UserSchema', UserSchema);
 
 module.exports = model;

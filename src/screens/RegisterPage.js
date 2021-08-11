@@ -25,6 +25,20 @@ class RegisterPage extends Component {
         this.props.navigation.goBack();
     }
 
+    handleRegisterPressed() {
+        const data = {
+            username: this.state.username,
+            password: this.state.password
+        }
+        axios.post('http://192.168.1.3:3000/api/register/', data)
+            .then((response) => {
+                
+            })
+            .catche((error) => {
+                console.log(error);
+            })
+    }
+
     render() {
         return(
             <SafeAreaView style = {styles.container}>
@@ -56,7 +70,7 @@ class RegisterPage extends Component {
                     <TouchableOpacity 
                         style = {styles.buttonLogin}
                         onPress = {() => {
-                            this.handleLoginPressed()
+                            this.handleRegisterPressed()
                         }}
                     >
                         <Text style = {{fontSize: 17}}>Sign up</Text>
