@@ -9,7 +9,7 @@ const verifyToken = (req, res, next) => {
             const decoded = jwt.verify(token, ACCESS_TOKEN);
             req.username = decoded.username;
         } catch(error) {
-            return res.status(400).send('Token is invalid!');
+            return res.status(401).send('Token is invalid!');
         }
         return next();
     } else {

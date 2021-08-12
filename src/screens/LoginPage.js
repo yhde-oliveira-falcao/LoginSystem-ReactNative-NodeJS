@@ -8,9 +8,24 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Alert
 } from 'react-native';
 
 const axios = require('axios');
+
+const displayAlert = (message) => {
+    Alert.alert(
+        "Notification",
+        message,
+        [
+            {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+            },
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+        ])
+}
 
 class LoginPage extends Component {
     constructor(props) {
@@ -28,13 +43,13 @@ class LoginPage extends Component {
         });
     }
 
-    handleLoginPressed = async () => {
+    handleLoginPressed = () => {
         const data = {
             username: this.state.username,
             password: this.state.password
         }
         axios.post('http://192.168.1.3:3000/api/login/', data)
-            .then(async (response) => {
+            .then( async (response) => {
                 try {
                     this.setState({ 
                         username: '',
@@ -45,11 +60,15 @@ class LoginPage extends Component {
                     })
                     await AsyncStorage.setItem('token', response.data.ACCESS_TOKEN);
                 } catch (e) {
-                    console.log(e);
+                    this.setState({ 
+                        username: '',
+                        password: ''
+                    })
+                    displayAlert('Username or password is invalid!');
                 }
             })
             .catch((error) => {
-                console.log(error)
+                displayAlert('Username or password is invalid!');
             })
     }
 

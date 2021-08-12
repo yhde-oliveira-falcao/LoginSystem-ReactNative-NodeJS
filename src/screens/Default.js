@@ -20,27 +20,31 @@ class Default extends Component {
     }
 
     getVerification = async () => {
-        const token = await AsyncStorage.getItem('token');
-        console.log(token);
-        axios.get('http://192.168.1.3:3000/api/private/', {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `${token}`
-            }
-        })
-            .then((response) => {
-                this.props.navigation.navigate('Welcome', {
-                    username: response.data.username
-                });
+        try {
+            const token = await AsyncStorage.getItem('token');
+            console.log(token);
+            axios.get('http://192.168.1.3:3000/api/private/', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `${token}`
+                }
             })
-            .catch((error) => {
-                console.log('Here');
-                this.props.navigation.navigate('Login', {
-                });
-            })
+                .then((response) => {
+                    this.props.navigation.navigate('Welcome', {
+                        username: response.data.username
+                    });
+                })
+                .catch((error) => {
+                    console.log('Here');
+                    this.props.navigation.navigate('Login', {
+                    });
+                })
+        } catch(error) {
+            console.log(error);
+        }
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         this.getVerification();
     }
 

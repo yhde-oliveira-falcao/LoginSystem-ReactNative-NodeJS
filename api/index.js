@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const app = express();
 const port = 3000;
 
+//Connect to Mongodb
 mongoose.connect('mongodb://localhost:27017/login-db', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -16,6 +17,7 @@ mongoose.connect('mongodb://localhost:27017/login-db', {
 
 app.use(express.json());
 
+// endpoint for login method
 app.post('/api/login/', async (req, res) => {
     const {username, password} = req.body;
     if(!(username && password)) {
@@ -45,6 +47,7 @@ app.post('/api/login/', async (req, res) => {
     }
 });
 
+// Endpoint for register new account
 app.post('/api/register/', async (req, res) => {
     const {username, password: passwordTmp} = req.body;
 
@@ -57,7 +60,6 @@ app.post('/api/register/', async (req, res) => {
     if(passwordTmp.length < 5) {
         res.status(400).send('Password is too short!');
     }
-    console.log(username + passwordTmp);
     const password = await bcrypt.hash(passwordTmp, 10);
     try {   
         const response = await User.create({
@@ -65,16 +67,13 @@ app.post('/api/register/', async (req, res) => {
             password
         });
         console.log('Create succesfully!');
+        res.status(200).json({USERNAME: username});
     } catch(error) {
-        if(error.code === 11000) {
-            res.status(400).send('Username is already in use');
-        }
-        throw error;
-        res.status(400).send(error);
+        res.status(400).send('Username is already in use');
     }
-    res.status(200).json({USERNAME: username});
 })
 
+// Endpoint for verifying when user enters any private screen
 app.get('/api/private/', verifyToken, (req, res, next) => {
     const username = req.username;
     res.status(200).send(username);

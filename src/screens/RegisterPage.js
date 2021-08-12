@@ -2,15 +2,30 @@ import React, { Component } from 'react';
 import 'localstorage-polyfill';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    View,
+    TextInput,
+    TouchableOpacity,
+    Alert
 } from 'react-native';
 
 const axios = require('axios');
+
+const displayAlert = (message) => {
+    Alert.alert(
+        "Notification",
+        message,
+        [
+            {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+            },
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+        ])
+}
 
 class RegisterPage extends Component {
     constructor(props) {
@@ -21,11 +36,11 @@ class RegisterPage extends Component {
         }
     }
 
-    handleSignInPressed() {
+    handleSignInPressed = () => {
         this.props.navigation.goBack();
     }
 
-    handleRegisterPressed() {
+    handleRegisterPressed = () =>{
         const data = {
             username: this.state.username,
             password: this.state.password
@@ -45,7 +60,7 @@ class RegisterPage extends Component {
                     username: '',
                     password: ''
                 });
-                console.log(error);
+                displayAlert('Username or password is in use');
             })
     }
 
