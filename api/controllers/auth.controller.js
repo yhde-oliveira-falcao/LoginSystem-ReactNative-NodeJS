@@ -22,7 +22,7 @@ module.exports.login = async (req, res) => {
     }
     const user = await User.findOne({username}).lean();
     if(!user) {
-        res.status(401).send('Username or password is invalid!');
+        res.status(401).send('Username is invalid!');
     }
     if(await bcrypt.compare(password, user.password)) {
         try {
@@ -41,6 +41,8 @@ module.exports.login = async (req, res) => {
         } catch(error) {
             return res.status(400).send('There are some error with our server, please try later!');
         }
+    } else {
+        return res.status(400).send('Password is invalid!');
     }
 }
 

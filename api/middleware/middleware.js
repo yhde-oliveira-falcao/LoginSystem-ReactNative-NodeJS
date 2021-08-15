@@ -6,6 +6,9 @@ const verifyToken = (req, res, next) => {
     const token = req.headers['authorization'];
     if(token) {
         try {
+            // Verify then token from client with secret key, 
+            // then get the username from the payload and compare with
+            // username sent with post method
             const decoded = jwt.verify(token, ACCESS_TOKEN);
             req.username = decoded.username;
         } catch(error) {
